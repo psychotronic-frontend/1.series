@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<style type="text/css" media="screen">
+    body {
+        display: flex;
+        padding: 0;
+        margin: 0;
+        height: 100vh;
+        background-color: #fff;
+    }
+
+    table {
+        margin: auto;
+        width: 36.666%;
+        height: 36.666%;
+        border-collapse: collapse;
+    }
+</style>
+
+<body>
+
+<script>
+    function SeedRandom(state1, state2){
+        const mod1 = 4294967087,
+            mul1 = 65539,
+            mod2 = 4294965887,
+            mul2=65537;
+
+        state1 = state1 % (mod1 - 1) + 1;
+        state2 = state2 % (mod2 - 1) + 1;
+
+        function random(limit) {
+            state1 = (state1 * mul1) % mod1;
+            state2 = (state2 * mul2) % mod2;
+            if(state1 < limit && state2 < limit && state1 < mod1 % limit && state2 < mod2 % limit)
+                return random(limit);
+            return (state1 + state2) % limit;
+        }
+
+        return random;
+    }
+
+    const rand = SeedRandom(42, 42);
+
+    const t = document.createElement('table');
+    let i = 12;
+    while(i--) {
+        const r = document.createElement('tr');
+        let j = 12;
+        while(j--) {
+            const c = document.createElement('td');
+            if(
+                (j > 0 && j < 11 && i > 0 && i < 11) ||
+                ((j === 0 || j === 11) && (i === 5 || i === 6)) ||
+                ((i === 0 || i === 11) && (j === 5 || j === 6))
+                ) 
+                c.style.backgroundColor = `hsla(${Math.ceil(rand(360) / 30) * 30 % 360}, 90%, 40%, 0.9)`;
+            r.appendChild(c);
+        }
+        t.appendChild(r);
+    }
+    document.body.appendChild(t);
+</script>
+
+</body>
